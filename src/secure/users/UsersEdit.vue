@@ -1,6 +1,6 @@
 <template>
-    <form>
-        <div class="form-group" @submit.prevent="submit">
+    <form  @submit.prevent="submit">
+        <div class="form-group">
             <label>First Name</label>
             <input type="text" class="form-control" name="first_name" v-model="firstName">
         </div>
@@ -23,14 +23,14 @@
             </select>
         </div>
 
-        <button class="btn btn-outline-secondary" type="submit">Save</button>
+        <button class="btn btn-outline-secondary">Save</button>
     </form>
 </template>
 <script lang="ts">
 import {ref, onMounted} from 'vue';
 import axios from 'axios';
 import {useRouter, useRoute} from 'vue-router';
-import {User} from '../../classes/user.ts'
+import {User} from '../../classes/user';
 
 export default {
     name: "UsersEdit",
@@ -59,6 +59,7 @@ export default {
         });
 
         const submit = async () => {
+
             await axios.put(`users/${params.id}`, {
                 first_name: firstName.value,
                 last_name: lastName.value,

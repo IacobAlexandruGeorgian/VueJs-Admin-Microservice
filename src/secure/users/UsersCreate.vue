@@ -1,6 +1,6 @@
 <template>
-    <form>
-        <div class="form-group" @submit.prevent="submit">
+    <form  @submit.prevent="submit">
+        <div class="form-group">
             <label>First Name</label>
             <input type="text" class="form-control" name="first_name" v-model="firstName">
         </div>

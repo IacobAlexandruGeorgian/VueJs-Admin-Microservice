@@ -1,22 +1,24 @@
 <template>
-<the-nav :user="user"></the-nav>
+<the-nav></the-nav>
 
 <div class="container-fluid">
   <div class="row">
     <the-menu></the-menu>
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-        <router-view></router-view>
+        <router-view v-if="user?.id"></router-view>
     </main>
   </div>
 </div>
 </template>
 
-<script>
+<script lang="ts">
 import {onMounted, ref} from 'vue';
-import TheMenu from "../components/TheMenu";
-import TheNav from "../components/TheNav";
+import TheMenu from "../components/TheMenu.vue";
+import TheNav from "../components/TheNav.vue";
 import axios from 'axios';
 import {useRouter} from "vue-router";
+import {useStore} from 'vuex';
+import {User} from '../classes/user';
 
 export default {
   name: "SecurePage",  
@@ -26,14 +28,26 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const user = ref(null);
-
+    const user = ref(new User());
+    const store = useStore();
 
     onMounted(async () => {
         try {
             const response = await axios.get('user');
 
-            user.value = response.data.data;
+            const u: User = response.data.data;
+
+            await store.dispatch('User/setUser', new User(
+              u.id,
+              u.first_name,
+              u.last_name,
+              u.email,
+              u.role,
+              u.permissions
+            ));
+
+            user.value = u;
+
         } catch (e) {
             await router.push('login');
         }

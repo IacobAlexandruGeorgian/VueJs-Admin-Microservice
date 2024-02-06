@@ -22,7 +22,7 @@
               <td>{{ order.email }}</td>
               <td>{{ order.total }}</td>
               <td>
-                <div class="btn-group mr-2">
+                <div class="btn-group mr-2" v-if="user.canEdit('orders')">
                     <router-link :to="`/orders/${order.id}`" class="btn btn-sn btn-outline-secondary">View</router-link>
                 </div>
               </td>
@@ -35,9 +35,10 @@
 </template>
 
 <script>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import axios from 'axios';
 import ThePaginator from "../../components/ThePaginator.vue";
+import {useStore} from 'vuex';
 
 export default {
     name: 'OrdersPage',
@@ -47,6 +48,9 @@ export default {
     setup() {
         const orders = ref([]);
         const lastPage = ref(0);
+        const store = useStore();
+
+        const user = computed(() => store.state.User.user);
 
         const load = async (page = 1) => {
             const response = await axios.get(`orders?page=${page}`);
@@ -69,6 +73,7 @@ export default {
 
         return {
             orders,
+            user,
             lastPage,
             load,
             exportFile

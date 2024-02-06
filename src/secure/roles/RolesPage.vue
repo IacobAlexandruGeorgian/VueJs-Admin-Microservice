@@ -1,7 +1,7 @@
 
 <template>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <div class="btn-toolbar mb-2 mb-nd-0">
+    <div class="btn-toolbar mb-2 mb-nd-0" v-if="user.canEdit('roles')">
         <router-link to="/roles/create" class="btn btn-sm btn-outline-secondary">Add</router-link>
     </div>
 </div>
@@ -19,7 +19,7 @@
                 <td>{{ role.id }}</td>
                 <td>{{ role.name }}</td>
                 <td>
-                    <div class="btn-group mr-2">
+                    <div class="btn-group mr-2" v-if="user.canEdit('roles')">
                         <router-link :to="`/roles/${role.id}/edit`" class="btn btn-sn btn-outline-secondary">Edit</router-link>
                         <a href="javascript:void(0)" class="btn btn-sn btn-outline-secondary" @click="del(role.id)">Delete</a>
                     </div>
@@ -32,13 +32,17 @@
 
 <script lang="ts">
 import axios from 'axios';
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import {Entity} from "../../interfaces/entity";
+import {useStore} from 'vuex';
 
 export default {
     name: 'RolesPage',
     setup() {
         const roles = ref([]);
+        const store = useStore();
+
+        const user = computed(() => store.state.User.user);
 
         onMounted(async () => {
             const response = await axios.get('roles');
@@ -57,6 +61,7 @@ export default {
 
         return {
             roles,
+            user,
             del
         }
     }

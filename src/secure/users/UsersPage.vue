@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <div class="btn-toolbar mb-2 mb-nd-0">
+        <div class="btn-toolbar mb-2 mb-nd-0" v-if="user.canEdit('users')">
             <router-link to="/users/create" class="btn btn-sm btn-outline-secondary">Add</router-link>
         </div>
     </div>
@@ -16,13 +16,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="user in users" :key="user.id">
-              <td>{{ user.id }}</td>
-              <td>{{ user.first_name }} {{ user.last_name }}</td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.role.name }}</td>
+            <tr v-for="userData in users" :key="userData.id">
+              <td>{{ userData.id }}</td>
+              <td>{{ userData.first_name }} {{ userData.last_name }}</td>
+              <td>{{ userData.email }}</td>
+              <td>{{ userData.role.name }}</td>
               <td>
-                <div class="btn-group mr-2">
+                <div class="btn-group mr-2" v-if="user.canEdit('users')">
                     <router-link :to="`/users/${user.id}/edit`" class="btn btn-sn btn-outline-secondary">Edit</router-link>
                     <a href="javascript:void(0)" class="btn btn-sn btn-outline-secondary" @click="del(user.id)">Delete</a>
                 </div>
@@ -36,10 +36,11 @@
 </template>
 
 <script lang="ts">
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import axios from 'axios';
 import {Entity} from "../../interfaces/entity";
 import ThePaginator from "../../components/ThePaginator.vue";
+import {useStore} from 'vuex';
 
 export default {
     name: "UsersPage",
@@ -49,6 +50,9 @@ export default {
     setup() {
         const users = ref([]);
         const lastPage = ref(0);
+        const store = useStore();
+
+        const user = computed(() => store.state.User.user);
 
         const load = async (page = 1) => {
             const response = await axios.get(`users?page=${page}`);
@@ -68,6 +72,7 @@ export default {
         onMounted(load);
 
         return {
+            user,
             users,
             del,
             lastPage,

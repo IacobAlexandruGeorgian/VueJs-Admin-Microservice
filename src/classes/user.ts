@@ -22,4 +22,12 @@ export class User implements Entity {
     get name() {
         return this.first_name + ' ' + this.last_name;
     }
+
+    canView(page: string) {
+        return this.permissions.some(p => p.name === `view_${page}`);
+    }
+
+    canEdit(page: string) {
+        return this.permissions.some(p => p.name === `edit_${page}`);
+    }
 }

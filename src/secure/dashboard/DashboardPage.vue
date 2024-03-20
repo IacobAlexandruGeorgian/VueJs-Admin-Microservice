@@ -29,7 +29,7 @@ export default {
                     x: {
                         type: 'timeseries',
                         tick: {
-                            format: '%Y-%n-%d'
+                            format: '%Y-%m-%d'
                         }
                     }
                 }

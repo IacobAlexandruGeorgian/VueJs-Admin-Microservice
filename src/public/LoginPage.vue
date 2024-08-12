@@ -26,12 +26,12 @@ export default {
         const router = useRouter();
 
         const submit = async () => {
-            const response = await axios.post('login', {
+            const response = await axios.post(`${process.env.VUE_APP_USERS_URL}/login`, {
                 email: email.value,
                 password: password.value,
                 scope: 'admin'
             });
-
+   
             localStorage.setItem('token', response.data.token);
             axios.defaults.headers['Authorization'] = `Bearer ${response.data.token}`;
 

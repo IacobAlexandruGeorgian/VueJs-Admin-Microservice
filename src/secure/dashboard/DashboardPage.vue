@@ -35,7 +35,7 @@ export default {
                 }
             });
 
-            const response = await axios.get('chart');
+            const response = await axios.get(`${process.env.VUE_APP_BASE_URL}/chart`);
 
             const records = response.data.data;
 

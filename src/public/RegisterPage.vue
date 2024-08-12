@@ -37,13 +37,15 @@ export default {
         const router = useRouter();
 
         const submit = async () => {
-            const response = await axios.post('register', {
+            const response = await axios.post(`${process.env.VUE_APP_USERS_URL}/register`, {
                 first_name: firstName.value,
                 last_name: lastName.value,
                 email: email.value,
                 password: password.value,
                 password_confirm: passwordConfirm.value
             });
+
+            console.log(response);
 
             await router.push("/login");
         }
